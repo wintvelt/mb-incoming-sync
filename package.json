@@ -1,0 +1,15 @@
+{
+  "name": "mb-incoming-sync",
+  "version": "1.0.0",
+  "description": "AWS Lambda function to sync incoming purchase invoices and receipts from moneybird with AWS",
+  "main": "handler.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha **/*.spec.js"
+  },
+  "author": "Wouter",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^7.0.1"
+  }
+}
