@@ -1,16 +1,3 @@
-# Welcome to Serverless!
-#
-# This file is the main config file for your service.
-# It's very minimal at this point and uses default values.
-# You can always add more config options for more control.
-# We've included some commented out config examples here.
-# Just uncomment any of them to get that config option.
-#
-# For full config options, check the docs:
-#    docs.serverless.com
-#
-# Happy Coding!
-
 service: mb-incoming-sync
 # app and org for use with dashboard.serverless.com
 app: mbplus
@@ -20,6 +7,10 @@ app: mbplus
 # Check out our docs for more details
 # frameworkVersion: "=X.X.X"
 
+custom:
+  bucket: mb-incoming-sync-files
+  sync-filename: mb-incoming-sync
+
 provider:
   name: aws
   runtime: nodejs12.x
@@ -27,6 +18,13 @@ provider:
 # you can overwrite defaults here
   stage: dev
   region: eu-central-1
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:PutObjectAcl
+      Resource: "arn:aws:s3:::${self:custom.bucket}/*"
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
@@ -58,8 +56,8 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
-    handler: handler.hello
+  mb-incoming-sync:
+    handler: handler.main
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
@@ -97,8 +95,9 @@ functions:
 #            path: /hello
 
 #    Define function environment variables here
-#    environment:
-#      variable2: value2
+    environment:
+      BUCKET: ${self:custom.bucket}
+      SYNC_FILENAME: ${self:custom.sync-filename}
 
 # you can add CloudFormation resource templates here
 #resources:
