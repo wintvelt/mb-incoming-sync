@@ -35,6 +35,7 @@ describe("The dedupe function", () => {
         const outList = helpers.dedupe(inList);
         expect(outList).to.eql(expected);
     });
+    console.log(process.env.STAGE);
 });
 
 const context = {
