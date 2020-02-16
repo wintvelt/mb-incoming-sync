@@ -27,5 +27,21 @@ module.exports.saveSyncPromise = (params, context) => {
         Key,
         Body: JSON.stringify(body),
         ContentType: 'application/json'
-    }).promise().catch(error => ({ error: error.message }));
+    }).promise()
+        .catch(error => ({ error: error.message }));
+}
+
+module.exports.getSyncPromise = (params, context) => {
+    const { adminCode, version } = params;
+    const { bucket, filename } = context;
+    const Key = `${adminCode}/${filename}-${version}.json`;
+    return s3.getObject({
+        Bucket: bucket,
+        Key
+    }).promise()
+        .then(data => {
+            const buffer = Buffer.from(data.Body);
+            return JSON.parse(buffer.toString('utf8'));
+        })
+        .catch(error => ({ error: error.message }));
 }

@@ -74,9 +74,19 @@ describe("The saveSyncPromise function", () => {
             body
         };
         const falseContext = { ...context, bucket: 'wrong-bucket' }
-        const dinges = await helpers.saveSyncPromise(params, falseContext);
-        expect(dinges).to.not.have.property('ETag');
-        expect(dinges).to.have.property('error');
+        const saveResult = await helpers.saveSyncPromise(params, falseContext);
+        expect(saveResult).to.not.have.property('ETag');
+        expect(saveResult).to.have.property('error');
     });
+});
 
+describe("The getSyncPromise function", () => {
+    it("retrieves the test file successfully", async () => {
+        const params = {
+            adminCode: testEnv.ADMIN_CODE,
+            version: 'latest'
+        };
+        const getResult = await helpers.getSyncPromise(params, context);
+        expect(getResult).to.have.property('receipts');
+    });
 });
