@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const mocha = require('mocha');
 const chai = require('chai');
 const expect = chai.expect;
@@ -10,7 +12,6 @@ const testEnv = {
     SYNC_FILENAME: 'mb-incoming-sync',
     ADMIN_CODE: '0000test'
 };
-
 
 describe("The dedupe function", () => {
     it("returns an empty list unchanged", () => {
@@ -90,3 +91,42 @@ describe("The getSyncPromise function", () => {
         expect(getResult).to.have.property('receipts');
     });
 });
+
+const oldList = [
+    { id: '1', version: '1' },
+    { id: '2', version: '1' },
+    { id: '3', version: '1' },
+    { id: '4', version: '1' },
+    { id: '5', version: '1' }
+];
+const newList = [
+    { id: '1', version: '1' },
+    { id: '2', version: '1' },
+    { id: '3', version: '3' },
+    { id: '4', version: '2' },
+    { id: '6', version: '1' }
+];
+
+describe("The changes function", () => {
+    const changeSet = helpers.changes(oldList, newList);
+    it("contains the new items - only in new list", () => {
+        expect(changeSet.new).to.be.an('array').that.eql(['6']);
+    });
+    it("contains items changed - with newer version", () => {
+        expect(changeSet.changed).to.be.an('array').that.eql(['3','4']);
+    });
+    it("contains deleted items - only in old list", () => {
+        expect(changeSet.deleted).to.be.an('array').that.eql(['5']);
+    });
+});
+
+describe("The environment variables", () => {
+    it("have an ACCESS_TOKEN", () => {
+        expect(process.env.ACCESS_TOKEN).to.not.be.undefined;
+        console.log(process.env.ACCESS_TOKEN)
+    });
+    it("have an ADMIN_CODE", () => {
+        expect(process.env.ADMIN_CODE).to.not.be.undefined;
+        console.log(process.env.ADMIN_CODE)
+    });
+})

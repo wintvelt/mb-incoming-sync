@@ -6,13 +6,11 @@ The url needs a valid Moneybird admin code. Also, the request header should have
 Tests:
 
 - [x] dedupe a list of ids
-- [ ] store a Moneybird sync object on S3
-- [ ] get a Moneybird sync from S3
+- [x] store a Moneybird sync object on S3
+- [x] get a Moneybird sync from S3
 - [ ] get a sync from Moneybird
-- [ ] get new and changed from old + new list of ids, versions
+- [x] get new, changed, deleted from old + new list of ids, versions
 - [ ] coverage for receipts changed to purchase invoices and vv
-- [ ] get deleted from old + new list of ids
-
 
 ### `GET /mb-incoming-sync/[admin-code]`
 Retrieves the latest state from Moneybird, saves the latest version of all docs.

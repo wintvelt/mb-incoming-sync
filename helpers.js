@@ -18,6 +18,17 @@ module.exports.dedupe = (list) => {
     return outList;
 }
 
+module.exports.changes = (oldList = [], newList = []) => {
+    const newItems = newList.filter(item => !oldList.find(it => it.id === item.id));
+    const deletedItems = oldList.filter(item => !newList.find(it => it.id === item.id));
+    const changedItems = newList.filter(item => !!oldList.find(it => (it.id === item.id && it.version < item.version)));
+    return {
+        new: newItems.map(item => item.id),
+        changed: changedItems.map(item => item.id),
+        deleted: deletedItems.map(item => item.id)
+    }
+}
+
 module.exports.saveSyncPromise = (params, context) => {
     const { adminCode, version, body } = params;
     const { bucket, filename } = context;
