@@ -7,6 +7,14 @@ dotenv.config();
 
 const helpers = require('./helpers');
 
+const testEnv = {
+    TEST_ADMIN: '12345',
+    BUCKET: 'mb-incoming-sync-files',
+    SYNC_FILENAME: 'mb-incoming-sync',
+    ADMIN_CODE: '0000test'
+};
+
+
 describe("The dedupe function", () => {
     it("returns an empty list unchanged", () => {
         const inList = [];
@@ -35,41 +43,41 @@ describe("The dedupe function", () => {
         const outList = helpers.dedupe(inList);
         expect(outList).to.eql(expected);
     });
-    console.log(process.env.STAGE);
+    console.log(process.env.STAGE === 'CircleCI');
 });
 
 const context = {
-    bucket: process.env.BUCKET,
-    filename: process.env.SYNC_FILENAME
+    bucket: testEnv.BUCKET,
+    filename: testEnv.SYNC_FILENAME
 };
 
 describe("The saveSyncPromise function", () => {
     it("returns ETag after save", async () => {
-        const body = { 
+        const body = {
             'receipts': [
                 { id: '1234', version: '1' }
             ]
         }
         const params = {
-            adminCode: process.env.ADMIN_CODE, 
-            version: 'latest', 
+            adminCode: testEnv.ADMIN_CODE,
+            version: 'latest',
             body
         };
         const dinges = await helpers.saveSyncPromise(params, context);
         expect(dinges).to.have.property('ETag');
     });
     it("returns Error with wrong bucket", async () => {
-        const body = { 
+        const body = {
             'receipts': [
                 { id: '1234', version: '1' }
             ]
         }
         const params = {
-            adminCode: process.env.ADMIN_CODE, 
-            version: 'latest', 
+            adminCode: testEnv.ADMIN_CODE,
+            version: 'latest',
             body
         };
-        const falseContext = { ...context, bucket: 'wrong-bucket'}
+        const falseContext = { ...context, bucket: 'wrong-bucket' }
         const dinges = await helpers.saveSyncPromise(params, falseContext);
         expect(dinges).to.not.have.property('ETag');
         expect(dinges).to.have.property('error');
