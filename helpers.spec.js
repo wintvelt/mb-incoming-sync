@@ -40,7 +40,6 @@ describe("The dedupe function", () => {
         const outList = helpers.dedupe(inList);
         expect(outList).to.eql(expected);
     });
-    console.log(process.env.STAGE === 'CircleCI');
 });
 
 const context = {
@@ -49,7 +48,7 @@ const context = {
 };
 
 describe("The saveSyncPromise function", () => {
-    it("returns ETag after save", async () => {
+    it("saves successfully and returns an ETag", async () => {
         const body = {
             'receipts': [
                 { id: '1234', version: '1' }
@@ -63,7 +62,7 @@ describe("The saveSyncPromise function", () => {
         const dinges = await helpers.saveSyncPromise(params, context);
         expect(dinges).to.have.property('ETag');
     });
-    it("returns Error with wrong bucket", async () => {
+    it("returns Error when the bucket is wrong", async () => {
         const body = {
             'receipts': [
                 { id: '1234', version: '1' }
