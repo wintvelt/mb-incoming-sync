@@ -2,9 +2,6 @@ const mocha = require('mocha');
 const chai = require('chai');
 const expect = chai.expect;
 
-const dotenv = require('dotenv');
-dotenv.config();
-
 const helpers = require('./helpers');
 
 const testEnv = {
