@@ -34,4 +34,8 @@ jobs:
 
       - run:
           name: Deploy application when on Master
-          command: sls deploy --stage dev
+          command: |
+            if [ "$CIRCLE_BRANCH" == "QA" ];
+            then
+              sls deploy --stage dev
+            fi
