@@ -56,3 +56,5 @@ module.exports.getSyncPromise = (params, context) => {
         })
         .catch(error => ({ error: error.message }));
 }
+
+// fake
