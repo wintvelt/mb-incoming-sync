@@ -123,10 +123,8 @@ describe("The changes function", () => {
 describe("The environment variables", () => {
     it("have an ACCESS_TOKEN", () => {
         expect(process.env.ACCESS_TOKEN).to.not.be.undefined;
-        console.log(process.env.ACCESS_TOKEN)
     });
     it("have an ADMIN_CODE", () => {
         expect(process.env.ADMIN_CODE).to.not.be.undefined;
-        console.log(process.env.ADMIN_CODE)
     });
 })
