@@ -33,5 +33,8 @@ jobs:
           command: npm test --coverage
 
       - run:
-          name: Deploy application
-          command: sls deploy --stage dev
+          name: Deploy application when on Master
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              sls deploy --stage dev
+            fi
