@@ -58,5 +58,14 @@ module.exports.getSyncPromise = (params, context) => {
 }
 
 module.exports.getMBPromise = (params, context) => {
-    return
+    const { adminCode, type } = params;
+    const { access_token } = context;
+    const headers = {
+        Authorization: 'Bearer ' + access_token
+    };
+    const url = `https://moneybird.com/api/v2/${adminCode}/documents/${type}/synchronization`;
+    const response = fetch(url, { headers })
+        .then(res => res.json())
+        .catch(error => ({ error: error.message }));
+    return response;
 }
