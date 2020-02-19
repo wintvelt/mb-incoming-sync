@@ -3,15 +3,6 @@ An AWS Lambda function to sync Moneybird incoming docs (purchase invoices and re
 
 The url needs a valid Moneybird admin code. Also, the request header should have a valid access token.
 
-Tests:
-
-- [x] dedupe a list of ids
-- [x] store a Moneybird sync object on S3
-- [x] get a Moneybird sync from S3
-- [x] get a sync from Moneybird
-- [x] get new, changed, deleted from old + new list of ids, versions
-- [ ] make main get function
-
 ### `POST /mb-incoming-sync/[admin-code]`
 Retrieves the latest state from Moneybird, saves the latest version of all docs.
 
@@ -51,32 +42,26 @@ NOTE: If a document changes from receipt to purchase invoice or vice versa, it w
 ### `GET /mb-incoming-sync/[admin-code]`
 Returns the latest sync state, without syncing with Moneybird or saving the sync.
 
-Response body has the same structure as the other end-point ;)
+Response body has the same structure as the POST end-point ;)
 
 ## Under the hood
-The regular API end-point:
+The main handler:
 
+- reads `mb-incoming-sync-latest.json` and `mb-incoming-sync-previous.json` from S3
 - retrieves the latest versions from all receipts and purchase invoices from Moneybird
-    - if error, returns an error response
-- if all OK:
-- read the file `mb-incoming-sync-latest.json` from S3 and store as `mb-incoming-sync-previous.json`
-- deduplicate response from Moneybird, and save as `mb-incoming-latest.json`
-- send deduped Moneybird response to `sim-func`
+    - if error, abort with error response
+- if OK:
+- created the latest sync from MB (deduped of course). 
+- if in POST mode
+    - save latest sync as `mb-incoming-latest.json`
+    - save latest sync from S3 as `mb-incoming-sync-previous.json` (replacing older version)
+- if save return error: abort
+- create a diff from:
+    - if GET: previous from S3 vs latest from S3 (= cached response)
+    - if POST: latest from S3 vs latest from Moneybird (= new diff)
+- return this diff as response
 
-For the `/sim` API:
-
-- start with a (deduplicated) latest version, get from S3
-- run `sim-func`
-
-The `sim-func`:
-- get `mb-incoming-sync-previous.json`
-- filter latest version, to only keep those
-    - that did not exist previously (as new)
-    - with a newer version number (as changed)
-- add deleted ids: that did exist in previous, but not in latest
-- return json response
-
-File structure:
+File structure of S3 files:
 ```json
 {
     "receipts": [
