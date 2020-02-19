@@ -7,7 +7,7 @@ var s3 = new AWS.S3({
     region: 'eu-central-1'
 });
 
-module.exports.dedupe = (list) => {
+const dedupe = (list) => {
     let outList = [];
     for (let i = 0; i < list.length; i++) {
         const item = list[i];
@@ -17,6 +17,19 @@ module.exports.dedupe = (list) => {
     }
     return outList;
 }
+
+module.exports.dedupe = dedupe;
+
+module.exports.syncBody = (receiptsWithDupe, purchase_invoicesWithDupe) => (
+    { 
+        receipts: dedupe(receiptsWithDupe),
+        purchase_invoices: dedupe(purchase_invoicesWithDupe)
+    }
+);
+
+module.exports.hasKey = (syncBody, key) => (
+    !!syncBody[key] && syncBody[key].length > 0
+)
 
 module.exports.changes = (oldList = [], newList = []) => {
     const newItems = newList.filter(item => !oldList.find(it => it.id === item.id));
@@ -51,6 +64,7 @@ module.exports.getSyncPromise = (params, context) => {
         Key
     }).promise()
         .then(data => {
+            if (!data.Body) return 'error';
             const buffer = Buffer.from(data.Body);
             return JSON.parse(buffer.toString('utf8'));
         })
