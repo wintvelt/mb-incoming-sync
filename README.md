@@ -8,9 +8,8 @@ Tests:
 - [x] dedupe a list of ids
 - [x] store a Moneybird sync object on S3
 - [x] get a Moneybird sync from S3
-- [ ] get a sync from Moneybird
+- [x] get a sync from Moneybird
 - [x] get new, changed, deleted from old + new list of ids, versions
-- [ ] coverage for receipts changed to purchase invoices and vv
 
 ### `GET /mb-incoming-sync/[admin-code]`
 Retrieves the latest state from Moneybird, saves the latest version of all docs.
@@ -46,6 +45,8 @@ Response body contains unique receipt ids and purchase invoice ids, of only thos
     },
 }
 ```
+NOTE: If a document changes from receipt to purchase invoice or vice versa, it will show up as `deleted` on one, and `new` on the other.
+
 ### `GET /mb-incoming-sync/[admin-code]/sim`
 Returns the latest sync state, without syncing with Moneybird.
 
