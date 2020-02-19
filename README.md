@@ -10,6 +10,7 @@ Tests:
 - [x] get a Moneybird sync from S3
 - [x] get a sync from Moneybird
 - [x] get new, changed, deleted from old + new list of ids, versions
+- [ ] make main get function
 
 ### `GET /mb-incoming-sync/[admin-code]`
 Retrieves the latest state from Moneybird, saves the latest version of all docs.
