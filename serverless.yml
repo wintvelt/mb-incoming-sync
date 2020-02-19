@@ -68,12 +68,12 @@ functions:
               paths:
                 admin: true            
       - http:
-        path: mb-incoming-sync/{admin}
-        method: post
-        request:
-          parameters:
-            paths:
-              admin: true            
+          path: mb-incoming-sync/{admin}
+          method: post
+          request:
+            parameters:
+              paths:
+                admin: true            
     environment:
       BUCKET: ${self:custom.bucket}
       SYNC_FILENAME: ${self:custom.sync-filename}
