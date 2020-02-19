@@ -141,14 +141,6 @@ describe("The getMBPromise function", () => {
         const response = await helpers.getMBPromise(params, context);
         expect(response).to.be.an('array').that.is.not.empty;
     });
-    it("gets purchase_invoices versions from Moneybird correctly", async () => {
-        const params = {
-            adminCode: process.env.ADMIN_CODE,
-            type: 'purchase_invoices'
-        };
-        const response = await helpers.getMBPromise(params, context);
-        expect(response).to.be.an('array').that.is.not.empty;
-    });
     it("throws an error when adminCode is absent", async () => {
         const params = {
             adminCode: '',
