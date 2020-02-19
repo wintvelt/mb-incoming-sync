@@ -113,7 +113,7 @@ describe("The changes function", () => {
         expect(changeSet.new).to.be.an('array').that.eql(['6']);
     });
     it("contains items changed - with newer version", () => {
-        expect(changeSet.changed).to.be.an('array').that.eql(['3','4']);
+        expect(changeSet.changed).to.be.an('array').that.eql(['3', '4']);
     });
     it("contains deleted items - only in old list", () => {
         expect(changeSet.deleted).to.be.an('array').that.eql(['5']);
@@ -126,5 +126,35 @@ describe("The environment variables", () => {
     });
     it("have an ADMIN_CODE", () => {
         expect(process.env.ADMIN_CODE).to.not.be.undefined;
+    });
+});
+
+describe("The getMBPromise function", () => {
+    const context = {
+        access_token: process.env.ACCESS_TOKEN
+    }
+    it("gets receipts versions from Moneybird correctly", async () => {
+        const params = {
+            adminCode: process.env.ADMIN_CODE,
+            type: 'receipts'
+        };
+        const response = await helpers.getMBPromise(params, context);
+        expect(response).to.be.an('array').that.is.not.empty;
+    });
+    it("throws an error when adminCode is absent", async () => {
+        const params = {
+            adminCode: '',
+            type: 'purchase_invoices'
+        };
+        const response = await helpers.getMBPromise(params, context);
+        expect(response).to.be.an('object').that.has.property('error');
+    });
+    it("throws an error when access_token is incorrect", async () => {
+        const params = {
+            adminCode: process.env.ADMIN_CODE,
+            type: 'purchase_invoices'
+        };
+        const response = await helpers.getMBPromise(params, { access_token: 'wrong'});
+        expect(response).to.be.an('object').that.has.property('error');
     });
 })
