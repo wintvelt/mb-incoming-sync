@@ -11,7 +11,7 @@ Tests:
 - [x] get a sync from Moneybird
 - [x] get new, changed, deleted from old + new list of ids, versions
 
-### `GET /mb-incoming-sync/[admin-code]`
+### `POST /mb-incoming-sync/[admin-code]`
 Retrieves the latest state from Moneybird, saves the latest version of all docs.
 
 Response body contains unique receipt ids and purchase invoice ids, of only those that are new, changed, or deleted since the last sync:
@@ -47,8 +47,8 @@ Response body contains unique receipt ids and purchase invoice ids, of only thos
 ```
 NOTE: If a document changes from receipt to purchase invoice or vice versa, it will show up as `deleted` on one, and `new` on the other.
 
-### `GET /mb-incoming-sync/[admin-code]/sim`
-Returns the latest sync state, without syncing with Moneybird.
+### `GET /mb-incoming-sync/[admin-code]`
+Returns the latest sync state, without syncing with Moneybird or saving the sync.
 
 Response body has the same structure as the other end-point ;)
 

@@ -7,7 +7,6 @@ const expect = chai.expect;
 const helpers = require('./helpers');
 
 const testEnv = {
-    TEST_ADMIN: '12345',
     BUCKET: 'mb-incoming-sync-files',
     SYNC_FILENAME: 'mb-incoming-sync',
     ADMIN_CODE: '0000test'
@@ -42,6 +41,41 @@ describe("The dedupe function", () => {
         expect(outList).to.eql(expected);
     });
 });
+
+describe("The syncBody function", () => {
+    it("merges 2 lists and removes duplicates", () => {
+        const receiptsWithDupes = [
+            { id: '1', version: '1' },
+            { id: '2', version: '1' },
+            { id: '3', version: '1' },
+            { id: '3', version: '1' },
+        ];
+        const invoicesWithDupes = [
+            { id: '1', version: '1' },
+            { id: '2', version: '1' },
+            { id: '3', version: '1' },
+            { id: '4', version: '1' },
+        ];
+        const result = helpers.syncBody(receiptsWithDupes, invoicesWithDupes);
+        expect(result).to.have.property('receipts');
+        expect(result.receipts).to.have.lengthOf(3);
+        expect(result).to.have.property('purchase_invoices');
+        expect(result.purchase_invoices).to.have.lengthOf(4);
+    })
+});
+
+describe("The hasKey function", () => {
+    const testObj = { receipts: [], purchase_invoices: [1, 2, 3] };
+    it("returns false if object does not have the key", () => {
+        expect(helpers.hasKey(testObj,'otherKey')).to.be.false;
+    });
+    it("returns false if object has the key, but key has empty array", () => {
+        expect(helpers.hasKey(testObj,'receipts')).to.be.false;
+    });
+    it("returns true if object has a key and it contains a non-empty array", () => {
+        expect(helpers.hasKey(testObj,'purchase_invoices')).to.be.true;
+    });
+})
 
 const context = {
     bucket: testEnv.BUCKET,
@@ -89,6 +123,14 @@ describe("The getSyncPromise function", () => {
         };
         const getResult = await helpers.getSyncPromise(params, context);
         expect(getResult).to.have.property('receipts');
+    });
+    it("returns an error if the file does not exits", async () => {
+        const params = {
+            adminCode: testEnv.ADMIN_CODE,
+            version: 'non-existent'
+        };
+        const getResult = await helpers.getSyncPromise(params, context);
+        expect(getResult).to.have.property('error');
     });
 });
 
@@ -154,7 +196,7 @@ describe("The getMBPromise function", () => {
             adminCode: process.env.ADMIN_CODE,
             type: 'purchase_invoices'
         };
-        const response = await helpers.getMBPromise(params, { access_token: 'wrong'});
+        const response = await helpers.getMBPromise(params, { access_token: 'wrong' });
         expect(response).to.be.an('object').that.has.property('error');
     });
 })
