@@ -36,7 +36,7 @@ module.exports.changes = (oldList = [], newList = []) => {
     const deletedItems = oldList.filter(item => !newList.find(it => it.id === item.id));
     const changedItems = newList.filter(item => !!oldList.find(it => (it.id === item.id && it.version < item.version)));
     return {
-        new: newItems.map(item => item.id),
+        added: newItems.map(item => item.id),
         changed: changedItems.map(item => item.id),
         deleted: deletedItems.map(item => item.id)
     }

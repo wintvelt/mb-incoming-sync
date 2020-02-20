@@ -152,7 +152,7 @@ const newList = [
 describe("The changes function", () => {
     const changeSet = helpers.changes(oldList, newList);
     it("contains the new items - only in new list", () => {
-        expect(changeSet.new).to.be.an('array').that.eql(['6']);
+        expect(changeSet.added).to.be.an('array').that.eql(['6']);
     });
     it("contains items changed - with newer version", () => {
         expect(changeSet.changed).to.be.an('array').that.eql(['3', '4']);

@@ -10,7 +10,7 @@ Response body contains unique receipt ids and purchase invoice ids, of only thos
 ```json
 {
     "receipts": { 
-        "new": [
+        "added": [
             "12341",
             "12342"
         ],
@@ -23,7 +23,7 @@ Response body contains unique receipt ids and purchase invoice ids, of only thos
         ]
     },
     "purchase_invoices": { 
-        "new": [
+        "added": [
             "22341",
             "22342"
         ],
