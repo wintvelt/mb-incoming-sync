@@ -77,7 +77,9 @@ module.exports.getMBPromise = (params, context) => {
     const headers = {
         Authorization: 'Bearer ' + access_token
     };
-    const url = `https://moneybird.com/api/v2/${adminCode}/documents/${type}/synchronization`;
+    const baseUrl = 'https://moneybird.com/api/v2';
+    const filter = encodeURI('filter=state:saved|open|late|paid|pending_payment');
+    const url = `${baseUrl}/${adminCode}/documents/${type}/synchronization.json?${filter}`;
     const response = fetch(url, { headers })
         .then(res => res.json())
         .catch(error => ({ error: error.message }));
