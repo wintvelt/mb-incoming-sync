@@ -38,3 +38,14 @@ functions:
             parameters:
               paths:
                 admin: true
+  mb-incoming-sync-webhook:
+    handler: webhook.main
+    events:
+      - http:
+          path: mb-incoming-sync/{admin}/sync
+          method: post
+          request:
+            parameters:
+              paths:
+                admin: true            
+              
