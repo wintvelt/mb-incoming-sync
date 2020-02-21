@@ -36,7 +36,7 @@ module.exports.main = async event => {
   const latestSync = helpers.syncBody(receiptSync, invoiceSync);
   // save latest + previous (if not empty)
   const [prevSave, latestSave] = await Promise.all([
-    (!isPOST || prevFromS3.error) ? true
+    (!isPOST || latestFromS3.error) ? true
       : helpers.saveSyncPromise({ adminCode, version: 'previous', body: latestFromS3 }, context),
     !isPOST ? true : helpers.saveSyncPromise({ adminCode, version: 'latest', body: latestSync }, context),
   ]);
