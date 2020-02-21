@@ -1,6 +1,9 @@
 service: mb-incoming-sync
 app: mbplus
 
+custom:
+  bucket: mb-incoming-sync-files
+
 provider:
   name: aws
   runtime: nodejs12.x
