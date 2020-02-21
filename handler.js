@@ -37,7 +37,7 @@ module.exports.main = async event => {
   // save latest + previous (if not empty)
   const [prevSave, latestSave] = await Promise.all([
     (!isPOST || prevFromS3.error) ? true
-      : helpers.saveSyncPromise({ adminCode, version: 'previous', body: prevFromS3 }, context),
+      : helpers.saveSyncPromise({ adminCode, version: 'previous', body: latestFromS3 }, context),
     !isPOST ? true : helpers.saveSyncPromise({ adminCode, version: 'latest', body: latestSync }, context),
   ]);
   if (prevSave.error || latestSave.error) return response(500, 'Server error');
