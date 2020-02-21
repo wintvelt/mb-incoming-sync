@@ -44,6 +44,11 @@ Returns the latest sync state, without syncing with Moneybird or saving the sync
 
 Response body has the same structure as the POST end-point ;)
 
+### `POST /mb-incoming-sync/[admin-code]/sync`
+Endpoint for webhook. Stores the document as `webhook.json` for now.
+
+Response is `200 OK`
+
 ## Under the hood
 The main handler:
 

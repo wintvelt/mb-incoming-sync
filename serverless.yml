@@ -1,10 +1,6 @@
 service: mb-incoming-sync
 app: mbplus
 
-custom:
-  bucket: mb-incoming-sync-files
-  sync-filename: mb-incoming-sync
-
 provider:
   name: aws
   runtime: nodejs12.x
@@ -38,7 +34,4 @@ functions:
           request:
             parameters:
               paths:
-                admin: true            
-    environment:
-      BUCKET: ${self:custom.bucket}
-      SYNC_FILENAME: ${self:custom.sync-filename}
+                admin: true
